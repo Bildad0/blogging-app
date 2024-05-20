@@ -25,12 +25,15 @@ SECRET_KEY = 'django-insecure-a_5d5mf#0gf3hwqb71h*^&5!^=a)iwtl()6==oi!xub7^smcwo
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ["127.0.0.1"]
 
+CORS_ALLOWED_ORIGINS = ["http://localhost:5173"]
 
+CORS_ALLOW_HEADERS = ["content-type"]
 # Application definition
 
 INSTALLED_APPS = [
+    'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -39,7 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'blog.apps.BlogConfig',
     'graphene_django',
-    'corsheaders',
+    
 ]
 
 MIDDLEWARE = [
@@ -129,4 +132,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 GRAPHENE ={
     "SCHEMA":"blog.schema.schema"
 }
-CORS_ALLOWED_ORIGINS = ("http://127.0.0.1:8000",)
+APPEND_SLASH=False

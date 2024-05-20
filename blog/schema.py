@@ -7,15 +7,15 @@ from blog import models
 
 class UserType(DjangoObjectType):
     class Meta:
-        model =get_user_model()
+        model = get_user_model()
 
 class AuthorType(DjangoObjectType):
     class Meta:
-        model =models.Profile
+        model = models.Profile
 
 class PostType(DjangoObjectType):
     class Meta:
-     model =models.Post
+     model = models.Post
 
 class TagType(DjangoObjectType):
     class Meta:
