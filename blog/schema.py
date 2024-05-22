@@ -27,6 +27,7 @@ class Query(graphene.ObjectType):
     post_by_slug = graphene.Field(PostType, slug=graphene.String())
     posts_by_author= graphene.List(PostType, usrname=graphene.String())
     posts_by_tag= graphene.List(PostType, tag= graphene.String())
+    related_posts = graphene.List(PostType, meta_description=graphene.String())
 
     def resolve_all_posts(root, info):
         return(
@@ -46,6 +47,7 @@ class Query(graphene.ObjectType):
     
     def resolve_posts_by_tag(root, info, tag):
         return(models.Post.objects.prefetch_related("tags").select_related("author").filter(tag__name__iexact=tag))
-    
+    def resolve_related_posts(self, info, meta_description):
+        return models.Post.objects.filter(metaDescription__icontains=meta_description).exclude(metaDescription=meta_description)
 
 schema = Schema(query=Query)

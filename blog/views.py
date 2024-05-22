@@ -4,6 +4,7 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
+from .models import Post
 
 @csrf_exempt
 def graphql_view(request):
@@ -15,3 +16,7 @@ def graphql_view(request):
         except json.JSONDecodeError:
             return JsonResponse({'error': 'Invalid JSON'}, status=400)
     return JsonResponse({'error': 'Invalid request method'}, status=400)
+
+def post_detail(request, slug):
+    post = Post.objects.get(slug=slug)
+    return render(request, 'post_detail.html', {'post': post})
