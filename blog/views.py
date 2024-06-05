@@ -17,6 +17,3 @@ def graphql_view(request):
             return JsonResponse({'error': 'Invalid JSON'}, status=400)
             
     return JsonResponse({'error': 'Invalid request method'}, status=400)
-def post_detail(request, slug):
-    post = Post.objects.get(slug=slug)
-    return render(request, 'post_detail.html', {'post': post})
