@@ -7,6 +7,9 @@ class Profile(models.Model):
         settings.AUTH_USER_MODEL,
         on_delete=models.PROTECT,
     )
+    email =models.EmailField(unique=True)
+    password= models.CharField(blank=False, max_length=255)
+    username=models.CharField( max_length=255,unique=True)
     website = models.URLField(blank=True)
     bio = models.CharField(max_length=240, blank=True)
 
