@@ -59,6 +59,25 @@ class CreateUser(graphene.Mutation):
         user = User.objects.create_user(username=username, password=password, email=email)
         return CreateUser(user=user)
     
+class CreatePost(graphene.Mutation):
+    post = graphene.Field(PostType)
+    class Arguments:
+        title = graphene.String(required=True)
+        subtitle = graphene.String()
+        slug = graphene.String(required = True)
+        body= graphene.String(required=True)
+        meta_description= graphene.String()
+        publish_date = graphene.DateTime()
+        published= graphene.Boolean(required=True)
+        imageUrl = graphene.String(required=True)
+        author_id = graphene.String(required=True)
+        tags= graphene.String(TagType,required=True)
+    def mutate(self, info,title, subtitle, slug, body, meta_description, publish_date, published, imageUrl,author_id, tags):
+        Author = User.objects.get(pk=author_id)
+        post = models.Post(title=title, subtitle= subtitle, slug=slug, body=body, meta_description=meta_description, publish_date= publish_date, published= published, imageUrl= imageUrl, author=Author, tags=tags )
+        post.save()
+        return CreatePost(post=post)
+    
 class Query(graphene.ObjectType):
     me = graphene.Field(UserType)
     all_posts = graphene.List(PostType)
@@ -114,6 +133,7 @@ class Mutation(graphene.ObjectType):
     delete_token_cookie = graphql_jwt.DeleteJSONWebTokenCookie.Field()
     refresh_token = graphql_jwt.Refresh.Field()
     delete_refresh_token_cookie = graphql_jwt.DeleteRefreshTokenCookie.Field()
+    create_post = CreatePost.Field()
    
 
 schema = Schema(query=Query, mutation=Mutation)
