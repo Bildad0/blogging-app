@@ -51,11 +51,11 @@ class CreateUser(graphene.Mutation):
     class Arguments:
         username = graphene.String(required=True)
         password = graphene.String(required=True)
-        email = graphene.String()
+        email = graphene.String(required=True)
 
-    def mutate(self, info, username, password, email=None):
+    def mutate(self, info, username, password, email):
         if not email:
-            email = 'default@example.com'
+            email = 'null'
         user = User.objects.create_user(username=username, password=password, email=email)
         return CreateUser(user=user)
     
@@ -67,7 +67,7 @@ class CreatePost(graphene.Mutation):
         slug = graphene.String(required = True)
         body= graphene.String(required=True)
         meta_description= graphene.String()
-        publish_date = graphene.DateTime()
+        publish_date = graphene.String()
         published= graphene.Boolean(required=True)
         imageUrl = graphene.String(required=True)
         author_id = graphene.String(required=True)
