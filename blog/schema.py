@@ -81,6 +81,7 @@ class CreatePost(graphene.Mutation):
 class Query(graphene.ObjectType):
     me = graphene.Field(UserType)
     all_posts = graphene.List(PostType)
+    all_tags= graphene.List(TagType)
     post_by_id = graphene.Field(PostType, id=graphene.Int())
     author_by_username = graphene.Field(AuthorType, username= graphene.String())
     post_by_slug = graphene.Field(PostType, slug=graphene.String())
@@ -98,6 +99,8 @@ class Query(graphene.ObjectType):
         return(
             models.Post.objects.prefetch_related("tags").select_related("author").all()
         )
+    def resolve_all_tags(root, info):
+        return(models.Tag.objects.all())
     
     def resolve_author_by_username(root, info, username):
         return models.Profile.objects.select_related("user").get(user_name = username)
