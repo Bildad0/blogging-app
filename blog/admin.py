@@ -2,7 +2,7 @@ from django.contrib import admin
 from blog.models import Post, Profile, Tag
 
 from django.contrib import admin
-from .models import Post, Tag
+from .models import Post, Tag, Comments
 
 
 # Register your models here.
@@ -16,7 +16,10 @@ class ProfileAdmin(admin.ModelAdmin):
 class TagAdmin(admin.ModelAdmin):
     model = Tag
 
-
+@admin.register(Comments)
+class CommentsAdmin(admin.ModelAdmin):
+    model = Comments
+    
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
     model = Post

@@ -19,10 +19,20 @@ class Profile(models.Model):
 
 class Tag(models.Model):
     name = models.CharField(max_length=50, unique=True)
+    desc = models.TextField(default="Blog")
 
     def __str__(self):
-        return self.name
+        return self
 
+
+class Comments(models.Model):
+    message = models.TextField(max_length=255)
+    time_posted = models.DateTimeField(auto_now_add=True)
+    author = models.ForeignKey(Profile, on_delete=models.PROTECT)
+
+    def __str__(self):
+        return self
+    
 
 class Post(models.Model):
     title = models.CharField(max_length=255, unique=True)
@@ -36,7 +46,9 @@ class Post(models.Model):
     published = models.BooleanField(default=False)
     imageUrl = models.URLField(max_length=200, blank=True, null=True)
     author = models.ForeignKey(Profile, on_delete=models.PROTECT)
-    tags = models.ManyToManyField(Tag, blank=True)
-
+    tags = models.ManyToManyField(Tag, blank = True)
+    comments = models.ManyToManyField(Comments, blank=True)
+    
     class Meta:
         ordering = ["-publish_date"]
+

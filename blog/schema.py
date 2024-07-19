@@ -24,6 +24,9 @@ class TagType(DjangoObjectType):
     class Meta:
         model = models.Tag
 
+class CommentsType(DjangoObjectType):
+    class Meta:
+        model = models.Comments
     
 class ObtainJSONWebToken(graphene.Mutation):
     token = graphene.String()
@@ -37,11 +40,8 @@ class ObtainJSONWebToken(graphene.Mutation):
     def mutate(cls, root, info, username, password):
         user = authenticate(username=username, password=password)
         if user is None:
-            raise Exception('Invalid username or password')
-
-        if not user.is_active:
-            raise Exception('User is inactive')
-
+            raise Exception('Invalid credentials')
+        
         token = get_token(user)
         return cls(token=token, user=user)
 
@@ -81,6 +81,7 @@ class CreatePost(graphene.Mutation):
 class Query(graphene.ObjectType):
     me = graphene.Field(UserType)
     all_posts = graphene.List(PostType)
+    comments = graphene.List(CommentsType)
     all_tags= graphene.List(TagType)
     post_by_id = graphene.Field(PostType, id=graphene.Int())
     author_by_username = graphene.Field(AuthorType, username= graphene.String())
@@ -99,6 +100,12 @@ class Query(graphene.ObjectType):
         return(
             models.Post.objects.prefetch_related("tags").select_related("author").all()
         )
+    def resolve_comment(root, info, id):
+        try:
+            return models.Comments.objects.get(pk=id)
+        except models.Comments.DoesNotExist:
+            return None
+    
     def resolve_all_tags(root, info):
         return(models.Tag.objects.all())
     
